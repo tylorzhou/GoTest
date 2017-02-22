@@ -1,0 +1,82 @@
+ git config --global user.name "Your Name"
+ git config --global user.email "email@example.com"
+
+ git init
+
+ git add readme.txt
+
+ git commit -m "wrote a readme file"
+
+ git status
+
+ git diff readme.txt 
+
+ git log --pretty=oneline
+
+ git reset --hard HEAD^
+
+ git reset --hard 3628164
+
+ git reflog
+
+ git checkout -- readme.txt
+
+ git reset HEAD readme.txt
+
+ git diff HEAD -- readme.txt
+
+ git rm test.txt
+
+ ssh-keygen -t rsa -C "youremail@example.com"
+
+ git remote add origin git@github.com:michaelliao/learngit.git
+
+ git push -u origin master
+ git push -f origin master
+
+ git clone git@github.com:michaelliao/gitskills.git
+
+ git checkout -b dev
+
+ git branch dev
+ git checkout dev
+
+ git merge dev
+
+ git merge --no-ff -m "merge with no-ff" dev
+
+ git log --graph --pretty=oneline --abbrev-commit
+
+ git stash
+
+ git stash list
+
+ git stash pop
+
+ git branch -d feature-vulcan
+
+ git branch -D feature-vulcan
+
+ git remote -v
+
+ git tag v1.0
+
+ git tag
+
+ git tag v0.9 6224937
+
+ git show v0.9
+
+ git tag -a v0.1 -m "version 0.1 released" 3628164
+
+ git tag -d v0.1
+
+ git push origin v1.0
+
+ git push origin --tags
+
+ git tag -d v0.9
+ git push origin :refs/tags/v0.9
+
+git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+
