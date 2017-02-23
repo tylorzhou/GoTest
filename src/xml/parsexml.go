@@ -19,7 +19,8 @@ type Show struct {
 	// the field of this struct doesn't match the xml tag
 	Title string `xml:"SeriesName"`
 	SeriesID int
-	keywords map[string]bool
+	//keyword map[string]bool
+	
 }
 
 type Episode struct {
@@ -52,6 +53,8 @@ func main() {
 	xml.Unmarshal(data, &q)
 	
 	fmt.Println(q.Series)
+	
+	//fmt.Println(q.keyword[""])
 	for _, episode := range q.EpisodeList {
 		fmt.Printf("%s\n", episode)
 	}
