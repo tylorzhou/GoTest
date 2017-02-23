@@ -80,3 +80,11 @@
 
 git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 
+
+git difftool test.txt
+
+git difftool some-branch test.txt
+
+git difftool tag1..tag2 test.txt
+
+git difftool branch1 branch2
