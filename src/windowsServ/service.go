@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
+	"net"
 	"time"
-	
+		
 	"golang.org/x/sys/windows/svc"
 	"golang.org/x/sys/windows/svc/debug"
 	"golang.org/x/sys/windows/svc/eventlog"
@@ -16,17 +17,13 @@ type myservice struct {}
 func (m *myservice) Execute(args []string, r <-chan svc.ChangeRequest, changes chan<- svc.Status) (ssec bool, errno uint32) {
 	const cmdsAccepted = svc.AcceptStop | svc.AcceptShutdown | svc.AcceptPauseAndContinue
 	changes <- svc.Status{State: svc.StartPending}
-	fasttick := time.Tick(500 * time.Millisecond)
-	slowtick := time.Tick(2 * time.Second)
-	tick := fasttick
 	changes <- svc.Status{State: svc.Running, Accepts: cmdsAccepted}
+	exitFromMain := make(chan uint32)
 	
+	go mainfunc(exitFromMain)
 loop:
 	for {
 		select {
-		case <-tick:
-			beep()
-			elog.Info(1, "beep")
 		case c := <-r:
 			switch c.Cmd {
 				case svc.Interrogate:
@@ -38,13 +35,13 @@ loop:
 					break loop
 				case svc.Pause:
 					changes <- svc.Status{State: svc.Paused, Accepts: cmdsAccepted}
-					tick = slowtick
 				case svc.Continue:
 					changes <- svc.Status{State: svc.Running, Accepts: cmdsAccepted}
-					tick = fasttick
 				default:
 					elog.Error(1, fmt.Sprintf("unexpected control request #%d", c))
 			}
+		case e := <- exitFromMain:
+			return true, e
 		}
 	}
 	changes <- svc.Status{State: svc.StopPending}
@@ -74,4 +71,27 @@ func runService(name string, isDebug bool){
 		return
 	}
 	elog.Info(1, fmt.Sprintf("%s service stopped", name))	
+}
+
+func mainfunc(r chan<- uint32) {
+	ln, err := net.Listen("tcp", ":8008")
+	if err != nil{
+	}//handle error
+	
+	for{
+		conn, err := ln.Accept()
+		if err != nil{
+		  continue;
+		}
+		go handleConnection(r, conn)
+	}
+	r <- 0
+}
+
+func handleConnection(r chan<- uint32,conn net.Conn){
+	//dec := gob.NewDecoder(conn)
+	//p := &P{}
+	//dec.Decode(p)
+	//fmt.Printf("Received : %+v", p);
+	//conn.Close();
 }

@@ -41,7 +41,7 @@ func main() {
 			runService(svcName, true)
 			return
 		case "install":
-			err = installService(svcName, "My service")
+			err = installService(svcName, "My service display")
 		case "remove":
 			err = removeService(svcName)
 		case "start":
