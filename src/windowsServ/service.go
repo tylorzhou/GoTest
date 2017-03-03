@@ -1,16 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"net"
 	"time"
 		
 	"golang.org/x/sys/windows/svc"
 	"golang.org/x/sys/windows/svc/debug"
-	"golang.org/x/sys/windows/svc/eventlog"
 )
 
-var elog debug.Log
 
 type myservice struct {}
 
@@ -38,7 +35,7 @@ loop:
 				case svc.Continue:
 					changes <- svc.Status{State: svc.Running, Accepts: cmdsAccepted}
 				default:
-					elog.Error(1, fmt.Sprintf("unexpected control request #%d", c))
+					Error.Printf("unexpected control request #%d", c)
 			}
 		case e := <- exitFromMain:
 			return true, e
@@ -50,27 +47,18 @@ loop:
 
 func runService(name string, isDebug bool){
 	var err error
-	if isDebug {
-		elog= debug.New(name)
-	} else {
-		elog, err = eventlog.Open(name)
-		if err != nil {
-			return
-		}
-	}
-	defer elog.Close()
 	
-	elog.Info(1, fmt.Sprintf("starting %s service", name))
+	Info.Printf("starting %s service", name)
 	run := svc.Run
 	if isDebug {
 		run = debug.Run
 	}
 	err = run(name, &myservice{})
 	if err != nil {
-		elog.Error(1, fmt.Sprintf("%s service failed: %v", name, err))
+		Error.Printf("%s service failed: %v", name, err)
 		return
 	}
-	elog.Info(1, fmt.Sprintf("%s service stopped", name))	
+	Info.Printf("%s service stopped", name)
 }
 
 func mainfunc(r chan<- uint32) {

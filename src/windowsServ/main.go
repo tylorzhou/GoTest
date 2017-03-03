@@ -25,7 +25,9 @@ func main() {
 	isIntSess, err := svc.IsAnInteractiveSession()
 	if err != nil {
 		log.Fatalf("failed to determine if we are running in an interactive session: %v", err)
-	}
+	}	
+	initLogFile(svcName)
+	
 	if !isIntSess {
 		runService(svcName, false)
 		return
