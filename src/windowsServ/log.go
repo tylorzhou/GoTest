@@ -2,7 +2,7 @@ package main
 
 import(
 	"io"
-	//"io/ioutil"
+	"path/filepath"
 	"log"
 	"os"
 )
@@ -13,6 +13,8 @@ var (
 	Warning *log.Logger
 	Error	*log.Logger
 )
+
+var ServDir string
 
 func Init(
 	traceHandle   io.Writer,
@@ -37,28 +39,36 @@ func Init(
 					log.Ldate|log.Ltime|log.Lshortfile)
 }
 
+
+
 func initLogFile(name string){
 
-	//Init(ioutil.Discard, os.Stdout, os.Stdout, os.Stderr)
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+    if err != nil {
+            log.Fatal(err)
+    }	
+	_ = os.Mkdir(dir + "\\log", os.ModeDir)
 
-	file, err := os.OpenFile(name + "Tracefile.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	ServDir = dir + "\\log"
+
+	file, err := os.OpenFile(ServDir + "\\Tracefile.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if(err != nil){
-		log.Printf("cannot generate log file Tracefile")
+		log.Printf("cannot generate log file Tracefile: %v", err)
 	}
 	
-	file1, err := os.OpenFile(name + "Infofile.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	file1, err := os.OpenFile(ServDir + "\\Infofile.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if(err != nil){
-		log.Printf("cannot generate log file Infofile")
+		log.Printf("cannot generate log file Infofile: %v", err)
 	}
 	
-	file2, err := os.OpenFile(name + "Warningfile.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	file2, err := os.OpenFile(ServDir + "\\Warningfile.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if(err != nil){
-		log.Printf("cannot generate log file Warningfile")
+		log.Printf("cannot generate log file Warningfile: %v", err)
 	}
 	
-	file3, err := os.OpenFile(name + "Errorfile.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	file3, err := os.OpenFile(ServDir + "\\Errorfile.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if(err != nil){
-		log.Printf("cannot generate log file Errorfile")
+		log.Printf("cannot generate log file Errorfile: %v", err)
 	}
 	
 	Init(file, file1, file2, file3)
