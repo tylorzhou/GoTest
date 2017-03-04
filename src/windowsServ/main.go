@@ -40,19 +40,26 @@ func main() {
 	cmd := strings.ToLower(os.Args[1])
 	switch cmd {
 		case "debug":
+			Info.Printf("debug mode server: " + svcName)
 			runService(svcName, true)
 			return
 		case "install":
+			Info.Printf("install server: " + svcName)
 			err = installService(svcName, "My service display")
 		case "remove":
+			Info.Printf("remove server: " + svcName)
 			err = removeService(svcName)
 		case "start":
+			Info.Printf("start server: " + svcName)
 			err = startService(svcName)
 		case "stop":
+			Info.Printf("stop server: " + svcName)
 			err = controlService(svcName, svc.Stop, svc.Stopped)
 		case "pause":
+			Info.Printf("pause server: " + svcName)
 			err = controlService(svcName, svc.Pause, svc.Paused)
 		case "continue":
+			Info.Printf("Continue server: " + svcName)
 			err = controlService(svcName, svc.Continue, svc.Running)
 		default:
 			usage(fmt.Sprintf("invalid command  %s", cmd))	

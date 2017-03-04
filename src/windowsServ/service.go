@@ -62,6 +62,7 @@ func runService(name string, isDebug bool){
 }
 
 func mainfunc(r chan<- uint32) {
+	Info.Printf("mainfunc lisening on port 8008")
 	ln, err := net.Listen("tcp", ":8008")
 	if err != nil{
 	}//handle error
@@ -77,9 +78,21 @@ func mainfunc(r chan<- uint32) {
 }
 
 func handleConnection(r chan<- uint32,conn net.Conn){
-	//dec := gob.NewDecoder(conn)
-	//p := &P{}
-	//dec.Decode(p)
-	//fmt.Printf("Received : %+v", p);
-	//conn.Close();
+
+	var buf [512]byte
+	var strData string
+    for {
+        n, err := conn.Read(buf[0:])
+        if err != nil {
+            return
+        }
+		strData = string(buf[0:n])
+        Trace.Print(strData)
+		if(strData == "shutdown"){
+			Trace.Print("channel input because shutdown")
+			r <- 0		
+			break;
+		}
+    }
+	conn.Close();
 }
