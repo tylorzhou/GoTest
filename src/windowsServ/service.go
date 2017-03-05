@@ -46,8 +46,7 @@ loop:
 }
 
 func runService(name string, isDebug bool){
-	var err error
-	
+	var err error	
 	Info.Printf("starting %s service", name)
 	run := svc.Run
 	if isDebug {
@@ -62,9 +61,11 @@ func runService(name string, isDebug bool){
 }
 
 func mainfunc(r chan<- uint32) {
-	Info.Printf("mainfunc lisening on port 8008")
+	const port = 8008	
+	Info.Printf("mainfunc lisening on port %d", port)
 	ln, err := net.Listen("tcp", ":8008")
 	if err != nil{
+		Error.Printf("Listen port %d failed %v", port, err)
 	}//handle error
 	
 	for{
@@ -74,7 +75,6 @@ func mainfunc(r chan<- uint32) {
 		}
 		go handleConnection(r, conn)
 	}
-	r <- 0
 }
 
 func handleConnection(r chan<- uint32,conn net.Conn){
@@ -84,6 +84,7 @@ func handleConnection(r chan<- uint32,conn net.Conn){
     for {
         n, err := conn.Read(buf[0:])
         if err != nil {
+			Error.Printf("read data faield from connection: %v", err)
             return
         }
 		strData = string(buf[0:n])
